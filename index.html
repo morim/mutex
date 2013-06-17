@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script type="text/javascript" src="./dateformat.js"></script>
+  <script type="text/javascript">
+  var firsttime;
+
+function loadfirst(){
+  var now=window.localStorage.getItem("first");
+  return now;
+}
+
+//起動時の時間保存
+function savefirst(){
+  var today = new DateFormat("yyyyMMddHHmmssSSS");
+  var now=today.format(new Date());
+  //localStorageに起動時間を保存する
+  window.localStorage.setItem("first", now);
+  return now;
+}
+
+function main(){
+  firsttime=savefirst();
+  console.log("第一歩");
+}
+
+//自分以外がlocalStrageを変更した場合のイベントを取得
+window.addEventListener("storage", function(e) {
+  //自分が古い方なら
+  if(loadfirst() > firsttime){
+    //タブのクローズ
+    window.opener = self;
+    window.close();
+    window.open("about:blank","_self").close();
+    console.log("close");
+  }
+});
+  </script>
+  <title>多重起動防止テスト</title>
+</head>
+<body onload="main()">
+<div></div>
+</body>
+</html>
